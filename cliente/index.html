@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+        crossorigin="anonymous">
+    </script>
+    <style>
+        form {background-color: rgba(0,0,0,.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0;right: 0; display: flex;height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px);}
+        ul {list-style-type: none; margin: 0;padding: 0;}
+        ul > li {padding: 0.5rem 1rem;}
+        ul > li:nth-child(odd) {background-color: #5c8fc9; color: white; text-align: right;font-style: italic; font-weight: 600;}
+
+    </style>
+    <title>Academia Chat</title>
+</head>
+
+<body>
+    <ul class="list-group">
+        <form action="">
+            <input type="text" class="form-control m-0" placeholder="Ingrese su mensaje">
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+    </ul>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        let socket = io();
+        // Enviar mensaje al servidor desde el DOM
+        const form = document.querySelector('form');
+        const input = document.querySelector('input');
+        let mensajes = document.querySelector('ul');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (input.value) {
+                socket.emit('chat', input.value);
+                input.value = '';
+            }
+        });
+
+        socket.on('chat', function (msg) {
+            let li = document.createElement('li');
+            li.textContent = msg;
+            mensajes.appendChild(li);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+    </script>
+</body>
+
+</html>
